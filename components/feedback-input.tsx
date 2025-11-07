@@ -15,15 +15,15 @@ import { Button } from "@/components/ui/button"
 interface FeedbackInputProps {
   onAddFeedback: (feedback: Omit<Feedback, "id">) => void
   onClearAll: () => void
+  existingFeedback?: Feedback[]
 }
 
-export function FeedbackInput({ onAddFeedback, onClearAll }: FeedbackInputProps) {
+export function FeedbackInput({ onAddFeedback, onClearAll, existingFeedback = [] }: FeedbackInputProps) {
   const [text, setText] = useState("")
   const [rating, setRating] = useState<number | "">(3)
   const [customer, setCustomer] = useState("")
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [feedback, setFeedback] = useState<Feedback[]>([])
 
   const handleAddFeedback = () => {
     if (!text.trim()) return
@@ -54,8 +54,14 @@ export function FeedbackInput({ onAddFeedback, onClearAll }: FeedbackInputProps)
       const text = await file.text()
       const lines = text.split("\n").filter((line) => line.trim())
 
+      if (lines.length === 0) {
+        alert("CSV file is empty")
+        return
+      }
+
       // Skip header if present
       const startIndex = lines[0]?.toLowerCase().includes("feedback") ? 1 : 0
+      let addedCount = 0
 
       lines.slice(startIndex).forEach((line) => {
         if (!line.trim()) return
@@ -78,11 +84,14 @@ export function FeedbackInput({ onAddFeedback, onClearAll }: FeedbackInputProps)
             sentiment,
             tags,
           })
+          addedCount++
         }
       })
+
+      alert(`Successfully added ${addedCount} feedback items from CSV`)
     } catch (error) {
       console.error("Error processing CSV:", error)
-      alert("Error processing CSV file")
+      alert("Error processing CSV file. Please check the format.")
     } finally {
       setIsProcessing(false)
       if (fileInputRef.current) fileInputRef.current.value = ""
@@ -90,15 +99,15 @@ export function FeedbackInput({ onAddFeedback, onClearAll }: FeedbackInputProps)
   }
 
   const handleExportReport = () => {
-    if (feedback.length === 0) {
+    if (existingFeedback.length === 0) {
       alert("No feedback to export")
       return
     }
 
-    const stats = calculateSentimentStats(feedback)
-    const kpis = calculateKPIs(feedback)
-    const positiveThemes = extractTopThemes(feedback, "positive")
-    const negativeThemes = extractTopThemes(feedback, "negative")
+    const stats = calculateSentimentStats(existingFeedback)
+    const kpis = calculateKPIs(existingFeedback)
+    const positiveThemes = extractTopThemes(existingFeedback, "positive")
+    const negativeThemes = extractTopThemes(existingFeedback, "negative")
 
     const report = `
 FEEDBACK SENTIMENT ANALYSIS REPORT
@@ -123,7 +132,7 @@ TOP NEGATIVE THEMES
 ${negativeThemes.map((t) => `- ${t.theme.replace("_", " ")}: ${t.count} mentions`).join("\n")}
 
 DETAILED FEEDBACK
-${feedback
+${existingFeedback
   .map(
     (f) =>
       `[${f.sentiment.toUpperCase()}] ${f.customer} - Rating: ${f.rating || "N/A"}\n${f.text}\nDate: ${new Date(f.date).toLocaleDateString()}`,
@@ -209,21 +218,26 @@ ${feedback
 
         <div className="border-t border-border pt-4">
           <label htmlFor="csv-upload" className="block text-sm font-medium text-foreground mb-2">
-            Upload CSV
+            Upload CSV File
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <input
               id="csv-upload"
               ref={fileInputRef}
               type="file"
-              accept=".csv"
+              accept=".csv,.txt"
               onChange={handleCSVUpload}
               disabled={isProcessing}
-              className="flex-1"
+              className="hidden"
               aria-label="CSV file upload"
             />
-            <Button variant="outline" disabled={isProcessing}>
-              {isProcessing ? "Processing..." : "Choose File"}
+            <Button
+              variant="outline"
+              disabled={isProcessing}
+              onClick={() => fileInputRef.current?.click()}
+              className="flex-1"
+            >
+              {isProcessing ? "Processing..." : "Choose CSV File"}
             </Button>
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
@@ -236,6 +250,7 @@ ${feedback
             variant="outline"
             className="flex-1 bg-transparent"
             onClick={handleExportReport}
+            disabled={existingFeedback.length === 0}
             aria-label="Export feedback analysis report"
           >
             Export Report

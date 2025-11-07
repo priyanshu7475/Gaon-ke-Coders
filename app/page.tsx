@@ -34,7 +34,7 @@ export default function Home() {
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8">
           {/* Input Section */}
-          <FeedbackInput onAddFeedback={addFeedback} onClearAll={clearAll} />
+          <FeedbackInput onAddFeedback={addFeedback} onClearAll={clearAll} existingFeedback={feedback} />
 
           {feedback.length > 0 ? (
             <>
