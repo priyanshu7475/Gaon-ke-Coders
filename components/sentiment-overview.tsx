@@ -19,45 +19,59 @@ export function SentimentOverview({ feedback }: SentimentOverviewProps) {
           <div>
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm text-foreground">Positive</span>
-              <span className="font-semibold" style={{ color: "hsl(var(--chart-1))" }}>
+              <span className="font-semibold" style={{ color: "#059669" }}>
                 {stats.positivePercent}%
               </span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full transition-all" style={{ backgroundColor: "hsl(var(--chart-1))" }} />
+              <div
+                className="h-full transition-all"
+                style={{ backgroundColor: "#059669" }}
+                style={{ width: `${stats.positivePercent}%` }}
+              />
             </div>
           </div>
 
           <div>
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm text-foreground">Neutral</span>
-              <span className="font-semibold" style={{ color: "hsl(var(--chart-3))" }}>
+              <span className="font-semibold" style={{ color: "#6b7280" }}>
                 {stats.neutralPercent}%
               </span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full transition-all" style={{ backgroundColor: "hsl(var(--chart-3))" }} />
+              <div
+                className="h-full transition-all"
+                style={{ backgroundColor: "#6b7280", width: `${stats.neutralPercent}%` }}
+              />
             </div>
           </div>
 
           <div>
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm text-foreground">Negative</span>
-              <span className="font-semibold" style={{ color: "hsl(var(--destructive))" }}>
+              <span className="font-semibold" style={{ color: "#ef4444" }}>
                 {stats.negativePercent}%
               </span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full transition-all" style={{ backgroundColor: "hsl(var(--destructive))" }} />
+              <div
+                className="h-full transition-all"
+                style={{ backgroundColor: "#ef4444", width: `${stats.negativePercent}%` }}
+              />
             </div>
           </div>
         </div>
       </Card>
 
       <Card className="flex flex-col items-center justify-center p-6">
-        <div className="mb-2 text-sm text-muted-foreground">Overall Sentiment</div>
+        <div className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
+          Overall Sentiment
+        </div>
         <div className="text-4xl font-bold text-foreground">{stats.headline}</div>
-        <div className="mt-2 text-xs text-muted-foreground">{stats.total} total feedback items</div>
+        <div className="mt-2 text-xs" style={{ color: "hsl(var(--muted-foreground))" }}>
+          {stats.total} total feedback items
+        </div>
       </Card>
     </div>
   )

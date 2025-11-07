@@ -23,14 +23,16 @@ export function ThemesDisplay({ feedback }: ThemesDisplayProps) {
                 <span className="capitalize text-foreground">{item.theme.replace("_", " ")}</span>
                 <span
                   className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
-                  style={{ backgroundColor: "hsl(var(--chart-1) / 0.1)", color: "hsl(var(--chart-1))" }}
+                  style={{ backgroundColor: "#dcfce7", color: "#059669" }}
                 >
                   {item.count}
                 </span>
               </div>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">No positive feedback yet</p>
+            <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
+              No positive feedback yet
+            </p>
           )}
         </div>
       </Card>
@@ -44,14 +46,16 @@ export function ThemesDisplay({ feedback }: ThemesDisplayProps) {
                 <span className="capitalize text-foreground">{item.theme.replace("_", " ")}</span>
                 <span
                   className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
-                  style={{ backgroundColor: "hsl(var(--destructive) / 0.1)", color: "hsl(var(--destructive))" }}
+                  style={{ backgroundColor: "#fee2e2", color: "#ef4444" }}
                 >
                   {item.count}
                 </span>
               </div>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">No negative feedback yet</p>
+            <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
+              No negative feedback yet
+            </p>
           )}
         </div>
       </Card>

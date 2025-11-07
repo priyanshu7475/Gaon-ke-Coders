@@ -25,7 +25,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-foreground">Feedback Sentiment Dashboard</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
             Real-time analysis of customer feedback with sentiment detection and theme extraction
           </p>
         </div>
